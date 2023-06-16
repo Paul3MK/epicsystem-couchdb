@@ -1,0 +1,7 @@
+{
+  "name": "EpicSystem",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
