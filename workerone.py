@@ -10,7 +10,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-import pycouchdb
+from ibm_cloud_sdk_core import ApiException
+from ibmcloudant import CloudantV1, Document
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -65,35 +66,33 @@ def main():
     except HttpError as err:
         print(err)
 
-def dbLoader(data):
+def dbUpload(data):
     """this function loads the data into couchDB
     """
-    user = os.getenv("LOCAL_COUCHDB_USERNAME")
-    pw = os.getenv("LOCAL_COUCHDB_PASSWORD")
-    # we first want to connect to the database
-    server = pycouchdb.Server(f"http://{user}:{pw}@localhost:5984/")
-
+    client = CloudantV1.new_instance()
+    db = "test_wedding"
     # create the right database
     try:
-        server.create("test_wedding")
-    except Exception as e:
-        print("Database test_wedding not created; already exists.")
+        client.put_database(db=db)
+    except ApiException as ae:
+        if ae.code == 412:
+            print(f"Cannot create '{db}' database, it already exists.")
     # then try to insert all relevant data
     try:
-        db = server.database("test_wedding")
         for row in data:
-            db.save({
-                "guest_code": str(row[0]),
-                "name": str(row[1]),
-                "guest_count":str(row[8]),
-                "sub_list":str(row[11]),
-                "guest_group":str(row[12]),
-                "seating_zone":str(row[17])
-            })
+            current_document: Document = Document(id=str(row[0]))
+            current_document.name = str(row[1])
+            current_document.guest_count = str(row[8])
+            current_document.sub_list = str(row[11])
+            current_document.guest_group = str(row[12])
+            current_document.seating_zone = str(row[17])
+
+            client.put_document(db=db, doc_id=str(row[0]), document=current_document)
+            
     except Exception as e:
         print(f"Error with db script: {e}")
     # figure upsert later. seems like searching before updating makes the most sense, due to revision numbers
 
 if __name__ == '__main__':
     data = main()
-    dbLoader(data)
+    dbUpload(data)
