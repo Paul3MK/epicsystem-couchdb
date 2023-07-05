@@ -1,0 +1,18 @@
+*{
+    font-family: Ubuntu;
+}
+
+.padding-global{
+    padding: 0 20px;
+}
+
+.container {
+    margin: auto;
+    max-width: 1140px;
+    width: 100%;
+}
+
+.padding-section-standard{
+    padding: 40px 0px;
+}
+

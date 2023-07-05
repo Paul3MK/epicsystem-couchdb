@@ -1,0 +1,13 @@
+.label{
+    opacity: 0.8;
+    text-transform: uppercase;
+    color: black;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.value{
+    color: black;
+    font-size: 1rem;
+
+}

@@ -1,22 +1,29 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import { IonButton, IonButtons, IonContent, IonHeader, IonItem, IonPage, IonTitle, IonToolbar, useIonViewDidEnter } from '@ionic/react';
 import './Home.css';
+import { useState } from 'react';
+import EpicLayout from '../components/EpicLayout';
+
 
 const Home: React.FC = () => {
+  const [dbInfo, setDbInfo] = useState<PouchDB.Core.DatabaseInfo>()
+  const [guestList, setGuestList] = useState<PouchDB.Query.Response<{}>>()
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Blank</IonTitle>
+          <IonTitle>Home</IonTitle>
+          <IonButtons slot="end">
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
+            <IonTitle size="large">Home</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer />
+        <EpicLayout/>
       </IonContent>
     </IonPage>
   );
