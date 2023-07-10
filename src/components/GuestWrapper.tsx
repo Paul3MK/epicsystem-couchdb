@@ -28,7 +28,7 @@ const GuestWrapper = ({ guest, user }: {guest: any, user:any}) => {
         _rev: guest.value._rev,
         guest_code: guest.key,
         seated: 1,
-        seated_by: user.username,
+        seated_by: user.id,
         additional_guests: formData.additional_guests,
         seated_time: Date.now(),
         name: guest.value.name,

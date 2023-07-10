@@ -54,7 +54,7 @@ const GuestCellTextarea = ({ label, formName, onChange, value }: {label: string,
                 </IonRow>
                 <IonRow>
                     <IonCol>
-                        <IonTextarea name={formName} placeholder="Any notes?" onIonChange={onChange} defaultValue={value}></IonTextarea>
+                        <IonTextarea fill="outline" name={formName} placeholder="Any notes?" onIonChange={onChange} defaultValue={value}></IonTextarea>
                     </IonCol>
                 </IonRow> 
             </IonGrid>

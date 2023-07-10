@@ -2,11 +2,12 @@ import { IonButton, IonButtons, IonContent, IonHeader, IonItem, IonPage, IonTitl
 import './Home.css';
 import { useState } from 'react';
 import EpicLayout from '../components/EpicLayout';
+import { Session, User } from '@supabase/supabase-js';
 
 
-const Home: React.FC = () => {
-  const [dbInfo, setDbInfo] = useState<PouchDB.Core.DatabaseInfo>()
-  const [guestList, setGuestList] = useState<PouchDB.Query.Response<{}>>()
+const Home = ({session}: {session:Session}):React.ReactElement => {
+
+  
 
   return (
     <IonPage>
@@ -23,7 +24,8 @@ const Home: React.FC = () => {
             <IonTitle size="large">Home</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <EpicLayout/>
+        <span>{session.user.id}</span>
+        <EpicLayout session={session}/>
       </IonContent>
     </IonPage>
   );

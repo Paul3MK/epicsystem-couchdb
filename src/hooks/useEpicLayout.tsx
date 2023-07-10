@@ -24,7 +24,7 @@ export default function useEpicLayout() {
         } catch(err){
             setError(err);
         }
-    })
+    }, [])
 
     return { dbInfo, guestList, error }
 }
