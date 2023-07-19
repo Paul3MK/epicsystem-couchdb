@@ -1,5 +1,5 @@
-import useEpicSidebar from "../hooks/useEpicSidebar"
-// import "./EpicRecents.css"
+import useSidebar from "../hooks/useSidebar"
+// import "./Recents.css"
 
 import { IonGrid, IonCol, IonRow } from "@ionic/react"
 
@@ -12,8 +12,8 @@ interface PouchDBSeatedArray extends PouchDB.Core.ExistingDocument<{}>{
 
 }
 
-function EpicRecents(user:any){
-    const {seatedArray}:{seatedArray:PouchDBSeatedArray[]|undefined} = useEpicSidebar(user.id);
+function Recents(user:any){
+    const {seatedArray}:{seatedArray:PouchDBSeatedArray[]|undefined} = useSidebar(user.id);
     return (
         <IonGrid className="grid-base">
             <IonRow>
@@ -50,4 +50,4 @@ function EpicRecents(user:any){
     )
 }
 
-export default EpicRecents
+export default Recents

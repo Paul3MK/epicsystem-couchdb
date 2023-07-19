@@ -5,7 +5,7 @@ import React, { FormEvent, useEffect } from "react";
 import { useState } from "react";
 import { GuestCell, GuestCellSelect, GuestCellTextarea} from "./GuestCell"
 import PouchDB from "pouchdb";
-import useEpicSidebar from "../hooks/useEpicSidebar";
+import useEpicSidebar from "../hooks/useSidebar";
 
 
 type F = {

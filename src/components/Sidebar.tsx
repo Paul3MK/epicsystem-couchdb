@@ -1,14 +1,14 @@
-// import "./EpicSidebar.css"
+// import "./Sidebar.css"
 import React, { useState } from "react";
 import GuestWrapper from "./GuestWrapper";
-import EntryBar from "./EntryBar";
-import useEpicSidebar from "../hooks/useEpicSidebar";
+import EntryBar from "./SearchBar";
+import useSidebar from "../hooks/useSidebar";
 import { IonCol, IonGrid, IonRow, SearchbarCustomEvent } from "@ionic/react";
 import { User } from "@supabase/supabase-js"
 
-function EpicSidebar(user:any) {
+function Sidebar(user:any) {
 
-    const { seatedArray, totalSeated, error} = useEpicSidebar(user.id)
+    const { seatedArray, totalSeated, error} = useSidebar(user.id)
     const [currentTime, setCurrentTime] = useState<string|null>(null)
 
     setInterval(()=>{
@@ -40,4 +40,4 @@ function EpicSidebar(user:any) {
 }
 
 
-export default EpicSidebar
+export default Sidebar

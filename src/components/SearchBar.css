@@ -1,0 +1,11 @@
+.entry-bar{
+    display: grid;
+    position: relative;
+    width: 100%;
+    grid-template-columns: 11fr 1fr;
+    grid-gap: 20px;
+}
+
+.searchbar-animated{
+    padding: 0;
+}

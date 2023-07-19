@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import PouchDB from 'pouchdb';
 
 
-export default function useEpicLayout() {
+export default function useHome() {
     const [dbInfo, setDbInfo] = useState<PouchDB.Core.DatabaseInfo>();
     const [guestList, setGuestList] = useState<PouchDB.Query.Response<{}> | null>(null); //useful for checks; if guestList is null, we know something hasn't happened
     const [error, setError] = useState<unknown>();
