@@ -34,7 +34,7 @@ setupIonicReact();
 const supabase = createClient('https://jwdisfzqcvnwtkoragjg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp3ZGlzZnpxY3Zud3Rrb3JhZ2pnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODg1NzAwNTksImV4cCI6MjAwNDE0NjA1OX0.Obs7AfaK8qbENWFJBh59VF0DMz9HUkRDOF8qb_8wLog')
 
 
-const App: React.FC = () => {
+const App = () => {
 
   const [session, setSession] = useState<null | Session>(null)
 
@@ -61,22 +61,18 @@ const App: React.FC = () => {
 
       return (
         <IonApp>
+          {/* <TopBar></TopBar> */}
           <IonReactRouter>
             <IonRouterOutlet>
               <Route exact path="/home">
                 {session ? <Home session={session} /> : <span>Yo</span>}
-              </Route>
-              <Route exact path="/edit">
-                <Edit />
-              </Route>
-              <Route exact path="/edit/:id">
-                <Edit />
               </Route>
               <Route exact path="/">
                 <Redirect to="/home" />
               </Route>
             </IonRouterOutlet>
           </IonReactRouter>
+          {/* <NavBar></NavBar> */}
         </IonApp>
       )
     }

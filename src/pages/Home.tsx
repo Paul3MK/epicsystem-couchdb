@@ -24,7 +24,6 @@ const Home = ({session}: {session:Session}):React.ReactElement => {
             <IonTitle size="large">Home</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <span>{session.user.id}</span>
         <EpicLayout session={session}/>
       </IonContent>
     </IonPage>

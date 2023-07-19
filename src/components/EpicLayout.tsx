@@ -2,21 +2,59 @@ import "./EpicLayout.css"
 import React, { useState } from "react";
 import GuestWrapper from "./GuestWrapper";
 import EpicSidebar from "./EpicSidebar";
+import EpicRecents from "./EpicRecents";
 import EntryBar from "./EntryBar";
 import useEpicLayout from "../hooks/useEpicLayout"
 import { IonCol, IonGrid, IonRow, SearchbarCustomEvent } from "@ionic/react";
 import { Session } from "@supabase/supabase-js";
 
+type Guest = {
+    _id: string,
+    _rev: string,
+    guest_code: string,
+    seated: number,
+    seated_by: string,
+    additional_guests: number,
+    seated_time: Date,
+    name: string,
+    guest_count: number,
+    sub_list: string,
+    guest_group: string,
+    seating_zone: string,
+    notes: string
+}
+
+type PDBRecord = {
+
+}
+
 
 const EpicLayout = ({session}: {session:Session}) => {
-    const [currentGuest, setCurrentGuest] = useState<{}>();
+    const [currentGuest, setCurrentGuest] = useState<any>();
     const { dbInfo, guestList, error } = useEpicLayout();
+    const [formData, setFormData] = useState({
+        additional_guests: currentGuest?.value.additional_guests,
+        notes: currentGuest?.value.notes
+      });
+    
+
+    const handleChange = (ev:any) => { //the right fix here is to make an interface which extends CustomEvent and defines target: HTMLIon...
+        const {name, value} = ev.target;
+        setFormData((prevFormData) => ({...prevFormData, [name]:value}));
+    }
+
 
     const getGuest = (ev: SearchbarCustomEvent) => {
         const k = ev.target.value
-        if (guestList) {
+        if (guestList && k) {
             let set = guestList.rows.filter((guest)=>{return guest.key == k?.toUpperCase()})
-            setCurrentGuest(set[0])
+            if(set[0])setCurrentGuest(set[0])
+            setFormData(()=>({additional_guests: set[0]?.value.additional_guests, notes: set[0]?.value.notes}))
+
+        }
+        else{
+            setCurrentGuest(null)
+            setFormData(()=>({additional_guests: null, notes: null}))
         }
     }
     return (
@@ -31,15 +69,14 @@ const EpicLayout = ({session}: {session:Session}) => {
                         </IonRow>
                         <IonRow>
                             <IonCol size="8">
-                                <GuestWrapper guest={currentGuest} user={session.user}/>
+                                <GuestWrapper guest={currentGuest} user={session.user} formData={formData} formDataUpdate={handleChange}/>
                             </IonCol>
                             <IonCol size="3" offset="1">
                                 <EpicSidebar user={session.user}/>
-                                <span>Heya</span>
                             </IonCol>
                         </IonRow>
                     </IonGrid>
-                    {/* <EpicRecents /> */}
+                    <EpicRecents user={session.user}/>
                 </div>
             </div>
         </div>

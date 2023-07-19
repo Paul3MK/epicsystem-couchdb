@@ -12,7 +12,7 @@ export default function useEpicLayout() {
         const getData = async() => {
             const db = new PouchDB("http://localhost:5984/test_wedding", {auth: {username: "admin", password:"hieg"}});
             const info = await db.info()
-            const filter = await db.query("test1/my_filter", {stale: "ok"})
+            const filter = await db.query("test1/my_filter", {include_docs: true})
 
             setDbInfo(info);
         

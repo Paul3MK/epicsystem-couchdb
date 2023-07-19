@@ -12,3 +12,12 @@
 #guest-code{
     margin-right: 10px;
 }
+
+.placeholder-box{
+    min-height: 300px;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

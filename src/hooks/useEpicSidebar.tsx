@@ -4,10 +4,11 @@ import PouchdbFind from 'pouchdb-find';
 PouchDB.plugin(PouchdbFind);
 
 
-export default function useEpicSidebar(user:string) {
+export default function useEpicSidebar(user:string): any{
     const [error, setError] = useState<unknown>();
-    const [seatedArray, setSeatedArray] = useState<null|Array<{}>>(null);
+    const [seatedArray, setSeatedArray] = useState<PouchDB.Core.ExistingDocument<{}>[]|undefined>([]);
     const [totalSeated, setTotalSeated] = useState<null|number>();
+    const [fetchState, setFetchState] = useState<boolean>(false);
     
     useEffect(() => {
         
@@ -36,8 +37,10 @@ export default function useEpicSidebar(user:string) {
             getData(user)
         } catch(err){
             setError(err);
+        } finally{
         }
-    }, [])
+    }, [fetchState])
 
-    return { seatedArray, totalSeated, error }
+    if (seatedArray) return { seatedArray, totalSeated, error, setFetchState }
+    // return { seatedArray:["nothing"], totalSeated, error}
 }

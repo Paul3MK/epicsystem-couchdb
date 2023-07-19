@@ -8,10 +8,8 @@ import { User } from "@supabase/supabase-js"
 
 function EpicSidebar(user:any) {
 
-    const { seatedArray, totalSeated, error } = useEpicSidebar(user.id)
+    const { seatedArray, totalSeated, error} = useEpicSidebar(user.id)
     const [currentTime, setCurrentTime] = useState<string|null>(null)
-
-
 
     setInterval(()=>{
         var d = new Date()

@@ -1,22 +1,21 @@
 import { IonButton, IonCol, IonGrid, IonRow } from "@ionic/react";
 import "./GuestWrapper.css"
 
-import React, { FormEvent } from "react";
+import React, { FormEvent, useEffect } from "react";
 import { useState } from "react";
 import { GuestCell, GuestCellSelect, GuestCellTextarea} from "./GuestCell"
 import PouchDB from "pouchdb";
+import useEpicSidebar from "../hooks/useEpicSidebar";
 
-const GuestWrapper = ({ guest, user }: {guest: any, user:any}) => {
 
-  const [formData, setFormData] = useState({
-    additional_guests: 0,
-    notes: ""
-  });
+type F = {
+  additional_guests: number,
+  notes: string
+}
 
-  const handleChange = (ev:any) => { //the right fix here is to make an interface which extends CustomEvent and defines target: HTMLIon...
-    const {name, value} = ev.target;
-    setFormData((prevFormData) => ({...prevFormData, [name]:value}));
-  }
+const GuestWrapper = ({ guest, user, formData, formDataUpdate }: {guest: any, user:any, formData:F, formDataUpdate:any}) => {
+
+  const {setFetchState} = useEpicSidebar(user)
 
   const seatGuest = (ev:any) => {
     ev.preventDefault();
@@ -44,6 +43,7 @@ const GuestWrapper = ({ guest, user }: {guest: any, user:any}) => {
 
     try{
       send();
+      setFetchState(true);
     } catch(err) {
       console.log(err);
     };
@@ -51,15 +51,16 @@ const GuestWrapper = ({ guest, user }: {guest: any, user:any}) => {
 
 
   return (
-    <form className="guest-wrapper" onSubmit={seatGuest}>
-      <div className="guest-bar">
-          <div className="guest-info">
-              {guest?<span id="guest-code">{guest.key}</span>:<span></span>}
-              {guest?<span id="guest-name">{guest.value.name}</span>:<span></span>}
-          </div>
-          <IonButton type="submit">Seat Guest</IonButton>
-      </div>
-        {guest?
+    <>
+      {guest?
+      <form className="guest-wrapper" onSubmit={seatGuest}>
+        <div className="guest-bar">
+            <div className="guest-info">
+                {guest?<span id="guest-code">{guest.key}</span>:<span></span>}
+                {guest?<span id="guest-name">{guest.value.name}</span>:<span></span>}
+            </div>
+            {guest.value.seated!=1 ? <IonButton type="submit">Seat Guest</IonButton> : <IonButton color="success" disabled={true}>Guest Seated</IonButton>}
+        </div>
         <IonGrid>
           <IonRow>
             <IonCol><GuestCell label="Seating Zone" value={guest.value.seating_zone}/></IonCol>
@@ -67,16 +68,17 @@ const GuestWrapper = ({ guest, user }: {guest: any, user:any}) => {
             <IonCol><GuestCell label="Sub_List" value={guest.value.sub_list}/></IonCol>
             <IonCol><GuestCell label="Guest Group" value={guest.value.guest_group}/></IonCol>
             <IonCol><GuestCell label="Seating Zone" value={guest.value.guest_count}/></IonCol>
-            <IonCol><GuestCellSelect formName="additional_guests" label="Additional Guests" onChange={handleChange}/></IonCol>
+            <IonCol><GuestCellSelect formName="additional_guests" label="Additional Guests" onChange={formDataUpdate} value={formData.additional_guests}/></IonCol>
           </IonRow>
           <IonRow>
             <IonCol>
-              <GuestCellTextarea value={guest.value.notes} formName="notes" label="Notes" onChange={handleChange}></GuestCellTextarea>
+              <GuestCellTextarea value={formData.notes} formName="notes" label="Notes" onChange={formDataUpdate} ></GuestCellTextarea>
             </IonCol>
           </IonRow>
         </IonGrid>
-        : <span></span> }
-    </form>
+      </form>
+      :<div className="placeholder-box">Look up a guest using the search bar!</div>}
+    </>
   );
 };
 
