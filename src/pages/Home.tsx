@@ -7,6 +7,7 @@ import SearchBar from "../components/SearchBar";
 import useHome from "../hooks/useHome"
 import { IonCol, IonGrid, IonRow, SearchbarCustomEvent } from "@ionic/react";
 import { Session } from "@supabase/supabase-js";
+import useDBAPI from "../hooks/useDBAPI";
 
 type Guest = {
     _id: string,
@@ -28,15 +29,26 @@ type PDBRecord = {
 
 }
 
+interface PouchDBSeatedObject extends PouchDB.Core.ExistingDocument<{}>{
+    guest_code: string,
+    name: string,
+    event_access: string,
+    additional_guests: number,
+    seating_zone: string
+
+}
+
 
 const Home = ({session}: {session:Session}) => {
+    // CUSTOM HOOKS
+    const { dbInfo, guestList, error } = useHome();
+
     // STATE
     const [currentGuest, setCurrentGuest] = useState<any>();
-    const { dbInfo, guestList, error } = useHome();
     const [formData, setFormData] = useState({
         additional_guests: currentGuest?.value.additional_guests,
         notes: currentGuest?.value.notes
-      });
+    });
     const [guestCode, setGuestCode] = useState<string|undefined|null>();
     
     // FUNCTIONS
@@ -50,7 +62,6 @@ const Home = ({session}: {session:Session}) => {
         setGuestCode(null)
     }
 
-
     const getGuest = (ev: SearchbarCustomEvent) => {
         const k = ev.target.value
         setGuestCode(k)
@@ -58,13 +69,14 @@ const Home = ({session}: {session:Session}) => {
             let set = guestList.rows.filter((guest)=>{return guest.key == k?.toUpperCase()})
             if(set[0])setCurrentGuest(set[0])
             setFormData(()=>({additional_guests: set[0]?.value.additional_guests, notes: set[0]?.value.notes}))
-
         }
         else{
             setCurrentGuest(null)
             setFormData(()=>({additional_guests: null, notes: null}))
         }
     }
+    const [{seatedArray, totalSeated, isLoading}, setDBState, send]:{seatedArray:PouchDBSeatedObject[], totalSeated:number, isLoading:boolean}[] = useDBAPI(session.user.id);
+    console.log("loading state 6"+isLoading)
 
     // MAIN
     return (
@@ -79,14 +91,16 @@ const Home = ({session}: {session:Session}) => {
                         </IonRow>
                         <IonRow>
                             <IonCol size="8">
-                                <GuestWrapper guest={currentGuest} user={session.user} formData={formData} formDataUpdate={handleChange}/>
+                                <GuestWrapper guest={currentGuest} user={session?.user} formData={formData} formDataUpdate={handleChange} update={send}/>
                             </IonCol>
                             <IonCol size="3" offset="1">
-                                <Sidebar user={session.user}/>
+                                {isLoading
+                                ?<span>Loading...</span>
+                                :<Sidebar user={session.user} seatedArray={seatedArray} totalSeated={totalSeated}/>}
                             </IonCol>
                         </IonRow>
                     </IonGrid>
-                    <Recents user={session.user}/>
+                    {isLoading?<span>Loading...</span>:<Recents user={session.user} seatedArray={seatedArray}/>}
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
-import useSidebar from "../hooks/useSidebar"
-// import "./Recents.css"
+import useDBAPI from "../hooks/useDBAPI"
+import "./Recents.css"
 
 import { IonGrid, IonCol, IonRow } from "@ionic/react"
 
@@ -12,8 +12,9 @@ interface PouchDBSeatedArray extends PouchDB.Core.ExistingDocument<{}>{
 
 }
 
-function Recents(user:any){
-    const {seatedArray}:{seatedArray:PouchDBSeatedArray[]|undefined} = useSidebar(user.id);
+function Recents({user, seatedArray}:{user:any, seatedArray:PouchDBSeatedArray[]|undefined}){
+    console.log(seatedArray)
+    
     return (
         <IonGrid className="grid-base">
             <IonRow>

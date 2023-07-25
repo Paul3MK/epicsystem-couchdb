@@ -5,7 +5,9 @@ import React, { FormEvent, useEffect } from "react";
 import { useState } from "react";
 import { GuestCell, GuestCellSelect, GuestCellTextarea} from "./GuestCell"
 import PouchDB from "pouchdb";
-import useEpicSidebar from "../hooks/useSidebar";
+import NameBar from "./NameBar";
+import SeatButton from "./SeatButton";
+import useSeatGuest from "../hooks/useSeatGuest";
 
 
 type F = {
@@ -13,40 +15,41 @@ type F = {
   notes: string
 }
 
-const GuestWrapper = ({ guest, user, formData, formDataUpdate }: {guest: any, user:any, formData:F, formDataUpdate:any}) => {
+const GuestWrapper = ({ guest, user, formData, formDataUpdate, update }: {guest: any, user:any, formData:F, formDataUpdate:any, update:any}) => {
+  // STATE
+  const [error, setError] = useState<unknown>();
+  
+  const [fetchState, setFetchState] = useState<boolean>(false);
+  // const [fullGuest, setFullGuest] = useState<any>({});
+  
 
-  const {setFetchState} = useEpicSidebar(user)
+  // HOOKS
+  
+
+  // const {setFetchState} = useSidebar(user)
+  
 
   const seatGuest = (ev:any) => {
     ev.preventDefault();
-    async function send(){
-      const db = new PouchDB("http://localhost:5984/test_wedding", {auth: {username: "admin", password:"hieg"}});
 
-      let doc = {
-        _id: guest.id,
-        _rev: guest.value._rev,
-        guest_code: guest.key,
-        seated: 1,
-        seated_by: user.id,
-        additional_guests: formData.additional_guests,
-        seated_time: Date.now(),
-        name: guest.value.name,
-        guest_count: guest.value.guest_count,
-        sub_list: guest.value.sub_list,
-        guest_group: guest.value.guest_group,
-        seating_zone: guest.value.seating_zone,
-        notes: formData.notes
-      };
-      console.log(doc)
-      db.put(doc);
+    let doc = {
+      _id: guest.id,
+      _rev: guest.value._rev,
+      guest_code: guest.key,
+      seated: 1,
+      seated_by: user.id,
+      additional_guests: formData.additional_guests,
+      seated_time: Date.now(),
+      name: guest.value.name,
+      guest_count: guest.value.guest_count,
+      sub_list: guest.value.sub_list,
+      guest_group: guest.value.guest_group,
+      seating_zone: guest.value.seating_zone,
+      notes: formData.notes
     };
 
-    try{
-      send();
-      setFetchState(true);
-    } catch(err) {
-      console.log(err);
-    };
+    update(doc)
+  
   }
 
 
@@ -55,11 +58,8 @@ const GuestWrapper = ({ guest, user, formData, formDataUpdate }: {guest: any, us
       {guest?
       <form className="guest-wrapper" onSubmit={seatGuest}>
         <div className="guest-bar">
-            <div className="guest-info">
-                {guest?<span id="guest-code">{guest.key}</span>:<span></span>}
-                {guest?<span id="guest-name">{guest.value.name}</span>:<span></span>}
-            </div>
-            {guest.value.seated!=1 ? <IonButton type="submit">Seat Guest</IonButton> : <IonButton color="success" disabled={true}>Guest Seated</IonButton>}
+            <NameBar guest={guest}/>
+            <SeatButton guest={guest} />
         </div>
         <IonGrid>
           <IonRow>

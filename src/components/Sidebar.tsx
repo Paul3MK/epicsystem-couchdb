@@ -2,13 +2,20 @@
 import React, { useState } from "react";
 import GuestWrapper from "./GuestWrapper";
 import EntryBar from "./SearchBar";
-import useSidebar from "../hooks/useSidebar";
+import useDBAPI from "../hooks/useDBAPI";
 import { IonCol, IonGrid, IonRow, SearchbarCustomEvent } from "@ionic/react";
 import { User } from "@supabase/supabase-js"
 
-function Sidebar(user:any) {
+interface PouchDBSeatedArray extends PouchDB.Core.ExistingDocument<{}>{
+    guest_code: string,
+    name: string,
+    event_access: string,
+    additional_guests: number,
+    seating_zone: string
 
-    const { seatedArray, totalSeated, error} = useSidebar(user.id)
+}
+
+function Sidebar({user, seatedArray, totalSeated}:{user:any, seatedArray:PouchDBSeatedArray[]|undefined, totalSeated:number}) {
     const [currentTime, setCurrentTime] = useState<string|null>(null)
 
     setInterval(()=>{
